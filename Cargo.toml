@@ -1,0 +1,17 @@
+[package]
+name = "simple-view3d"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.102"
+clap = { version = "4.5.60", features = ["derive"] }
+
+kiss3d = "0.40.0"
+properties3d = { git = "https://github.com/geomodel/properties3d.git" }
+
+[profile.release]
+strip = true # Automatically strip symbols from the binary
+opt-level = "s" # Optimize for size
+lto = true # Enable link time optimization
+codegen-units = 1 # Maximize size reduction optimizations
