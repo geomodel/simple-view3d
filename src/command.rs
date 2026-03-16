@@ -8,7 +8,7 @@ const U: &str = "-999";
 
 
 //  //  //  //  //  //  //  //
-pub fn run() -> Data3D {
+pub fn run() -> (Data3D, String) {
     let cli = CliArgs::parse();
 
     let grid = CachedGrid::new(cli.i_max, cli.j_max, cli.k_max);
@@ -42,13 +42,16 @@ pub fn run() -> Data3D {
     let max_value = 1e-9 + max_value
             .expect("undefined max_value");
 
-    Data3D {
-        name: cli.property,
-        grid,
-        property,
-        min_value,
-        max_value,
-    }
+    (
+        Data3D {
+            name: cli.property,
+            grid,
+            property,
+            min_value,
+            max_value,
+        },
+        cli.location,
+    )
 }
 
 pub struct Data3D {
@@ -81,6 +84,8 @@ impl Data3D {
 #[derive(clap::Parser, Debug)]
 #[command(about)]
 struct CliArgs {
+    #[arg(long, default_value="")]
+    location: String,
     #[arg(short, long, default_value_t=37)]
     i_max: usize,
     #[arg(short, long, default_value_t=43)]

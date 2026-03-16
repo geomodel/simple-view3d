@@ -9,7 +9,7 @@ use content3d::*;
 //  //  //  //  //  //  //  //
 #[kiss3d::main]
 async fn main() {
-    let data3d = command::run();
+    let (data3d, _location) = command::run();
 
     let mut window = Window::new(&format!("view3d: {}", data3d.name)).await;
     let mut camera = OrbitCamera3d::default();
