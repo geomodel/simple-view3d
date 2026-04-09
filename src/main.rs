@@ -11,7 +11,7 @@ mod content3d;
 async fn main() {
     let (data3d, _start_location) = command::run();
 
-    let mut window = Window::new(&format!("view3d.2: {}", data3d.name)).await;
+    let mut window = Window::new(&format!("view3d: {}", data3d.name)).await;
     let mut camera = OrbitCamera3d::default();
     let mut scene = SceneNode3d::empty()
                     .rotate( Quat::from_axis_angle(Vec3::X, -PI/2.) )
