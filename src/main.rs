@@ -3,7 +3,7 @@ use std::f32::consts::PI;
 
 mod command;
 mod content3d;
-//use content3d::*;
+mod data;
 
 //  //  //  //  //  //  //  //
 //  //  //  //  //  //  //  //
@@ -26,10 +26,10 @@ async fn main() {
 
     let font = Font::default();
     let info_text = format!(
-        "max: {:1.4}\navr: {1:4}\nmin: {:1.4}",
-        data3d.max_value,
-        data3d.avr_value,
+        "min: {:1.4}\navr: {:1.4}\nmax: {:1.4}",
         data3d.min_value,
+        data3d.avr_value,
+        data3d.max_value,
     );
 
     content3d::init_axes(&mut scene, 0.5);

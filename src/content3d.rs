@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 use kiss3d::prelude::*;
 
 use properties3d::*;
-
+use crate::data;
 
 //  //  //  //  //  //  //  //
 //  //  //  //  //  //  //  //
@@ -37,7 +37,7 @@ pub fn construct_property3d(
     scene: &mut SceneNode3d,
     z_scale: f32,
     scale: f32,
-    data3d: &crate::command::Data3D,
+    data3d: &data::Data3D,
 ){
     let i_max = data3d.grid.i_max() as f32;
     let j_max = data3d.grid.j_max() as f32;

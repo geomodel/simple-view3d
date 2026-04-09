@@ -3,12 +3,12 @@ use clap::Parser;
 use properties3d::*;
 use properties3d::types3d::*;
 
+use crate::data;
+
 const U: &str = "-999";
 
-
-
 //  //  //  //  //  //  //  //
-pub fn run() -> (Data3D, String) {
+pub fn run() -> (data::Data3D, String) {
     let cli = CliArgs::parse();
 
     let grid = CachedGrid::new(cli.i_max, cli.j_max, cli.k_max);
@@ -17,6 +17,7 @@ pub fn run() -> (Data3D, String) {
 
     let mut min_value: Option<f32> = None;
     let mut max_value: Option<f32> = None;
+    let mut sum_num: Option<(f32, usize)> = None;
     for index in 0..grid.size() {
         if let Some(v) = property[index] {
             let v = v as f32;
@@ -34,6 +35,11 @@ pub fn run() -> (Data3D, String) {
                     max_value = Some(v);
                 }
             }
+            if let Some((sum, num)) = sum_num {
+                sum_num = Some((sum+v, num+1));
+            } else {
+                sum_num = Some((v, 1));
+            }
         }
     }
 
@@ -41,44 +47,22 @@ pub fn run() -> (Data3D, String) {
             .expect("undefined min_value");
     let max_value = 1e-6 + max_value
             .expect("undefined max_value");
+    let (sum, num) = sum_num
+            .expect("no values to average");
+    let avr_value = sum / (num as f32);
 
     (
-        Data3D {
+        data::Data3D {
             name: cli.property,
             grid,
             property,
             min_value,
+            avr_value,
             max_value,
         },
         cli.location,
     )
 }
-
-pub struct Data3D {
-    pub name: String,
-    pub grid: CachedGrid,
-    pub property: Property<Continuous>,
-    pub min_value: f32,
-    pub max_value: f32,
-}
-impl Data3D {
-    pub fn get_norm_value(&self, i: usize, j: usize, k: usize) -> Option<f32> {
-        let ijk = IJK {
-            i: i,
-            j: j,
-            k: k,
-        };
-
-        let Some(index) = self.grid.index_from(&ijk) else {
-            return None;
-        };
-        let Some(v) = self.property[index] else {
-            return None;
-        };
-        Some( ((v as f32)-self.min_value)/(self.max_value-self.min_value) )
-    }
-}
-
 
 //  //  //  //  //  //  //  //
 #[derive(clap::Parser, Debug)]
