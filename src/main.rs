@@ -3,15 +3,15 @@ use kiss3d::prelude::*;
 
 mod command;
 mod content3d;
-use content3d::*;
+//use content3d::*;
 
 //  //  //  //  //  //  //  //
 //  //  //  //  //  //  //  //
 #[kiss3d::main]
 async fn main() {
-    let (data3d, _location) = command::run();
+    let (data3d, _start_location) = command::run();
 
-    let mut window = Window::new(&format!("view3d: {}", data3d.name)).await;
+    let mut window = Window::new(&format!("view3d.2: {}", data3d.name)).await;
     let mut camera = OrbitCamera3d::default();
     let mut scene = SceneNode3d::empty()
                     .rotate( Quat::from_axis_angle(Vec3::X, -PI/2.) )
@@ -24,9 +24,13 @@ async fn main() {
                     .add_light(Light::point(100.0))
                     .set_position(Vec3::new(0.0, 40.0, -20.0));
 
-    init_axes(&mut scene, 0.5);
-    construct_property3d(&mut scene, 1., 0.8, &data3d);
+    let font = Font::default();
+    let info_text = format!("min: {:1.4}\nmax: {:1.4}", data3d.min_value, data3d.max_value);
+
+    content3d::init_axes(&mut scene, 0.5);
+    content3d::construct_property3d(&mut scene, 1., 0.8, &data3d);
 
     while window.render_3d(&mut scene, &mut camera).await {
+        window.draw_text(&info_text, Vec2::ZERO, 20.0, &font, CYAN);
     }
 }

@@ -32,6 +32,7 @@ pub fn init_axes(scene: &mut SceneNode3d, size: f32) {
                     .set_color(BLUE);
 }
 
+//  //  //  //  //  //  //  //
 pub fn construct_property3d(
     scene: &mut SceneNode3d,
     z_scale: f32,

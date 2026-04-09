@@ -39,7 +39,7 @@ pub fn run() -> (Data3D, String) {
 
     let min_value = min_value
             .expect("undefined min_value");
-    let max_value = 1e-9 + max_value
+    let max_value = 1e-6 + max_value
             .expect("undefined max_value");
 
     (
