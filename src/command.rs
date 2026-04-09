@@ -8,7 +8,7 @@ use crate::data;
 const U: &str = "-999";
 
 //  //  //  //  //  //  //  //
-pub fn run() -> (data::Data3D, String) {
+pub fn run() -> (data::Data3D, f32) {
     let cli = CliArgs::parse();
 
     let grid = CachedGrid::new(cli.i_max, cli.j_max, cli.k_max);
@@ -60,7 +60,7 @@ pub fn run() -> (data::Data3D, String) {
             avr_value,
             max_value,
         },
-        cli.location,
+        cli.z_scale,
     )
 }
 
@@ -68,13 +68,13 @@ pub fn run() -> (data::Data3D, String) {
 #[derive(clap::Parser, Debug)]
 #[command(about)]
 struct CliArgs {
-    #[arg(long, default_value="")]
-    location: String,
-    #[arg(short, long, default_value_t=37)]
+    #[arg(short, long, default_value_t=1.0)]
+    z_scale: f32,
+    #[arg(short, long)]
     i_max: usize,
-    #[arg(short, long, default_value_t=43)]
+    #[arg(short, long)]
     j_max: usize,
-    #[arg(short, long, default_value_t=13)]
+    #[arg(short, long)]
     k_max: usize,
     #[arg(short, long)]
     property: String,

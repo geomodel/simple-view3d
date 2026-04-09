@@ -9,7 +9,7 @@ mod data;
 //  //  //  //  //  //  //  //
 #[kiss3d::main]
 async fn main() {
-    let (data3d, _start_location) = command::run();
+    let (data3d, z_scale) = command::run();
 
     let mut window = Window::new(&format!("view3d: {}", data3d.name)).await;
     let mut camera = OrbitCamera3d::default();
@@ -33,7 +33,7 @@ async fn main() {
     );
 
     content3d::init_axes(&mut scene, 0.5);
-    content3d::construct_property3d(&mut scene, 1., 0.8, &data3d);
+    content3d::construct_property3d(&mut scene, z_scale, 0.8, &data3d);
 
     while window.render_3d(&mut scene, &mut camera).await {
         window.draw_text(&info_text, Vec2::ZERO, 20.0, &font, CYAN);

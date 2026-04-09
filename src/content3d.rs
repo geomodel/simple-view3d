@@ -63,10 +63,10 @@ pub fn construct_property3d(
     let start_j = (dj - j_size) / 2.;
     let start_k = (dk - k_size) / 2.;
 
-    let j_max_1 = data3d.grid.i_max() - 1;
-    let i_mid = data3d.grid.i_max() / 3;
-    let j_mid = data3d.grid.j_max() * 2 / 3;
-    let k_mid = data3d.grid.k_max() / 3;
+    let j_max_1 = data3d.grid.j_max() - 1;
+    let i_mid = data3d.grid.i_max() / 2 - 1;
+    let j_mid = data3d.grid.j_max() / 2 + 1;
+    let k_mid = data3d.grid.k_max() / 2 - 1;
 
     for i in 0..data3d.grid.i_max() {
         for j in 0..data3d.grid.j_max() {
