@@ -13,14 +13,8 @@ const UNDEF: f32 = -999.0;
 fn auto_loader(file_name: &str) -> io3d::Result<(usize, usize, usize, Box<[Option<f64>]>)> {
     println!("autodimensions..");
     let (h, r) = io3d::GSHeader::from_filename(file_name)?;
+    let (i, j, k) = h.parse_ijk_dims()?;
     let p = io3d::GSProperty::from_gs_header(h, r)?;
-    let info: Vec<&str> = p.header.title.split_ascii_whitespace().collect();
-    if info[0] != "ijk-dims:" {
-        return Err("title is not <ijk-dims>".into());
-    }
-    let i: usize = info[1].parse()?;
-    let j: usize = info[2].parse()?;
-    let k: usize = info[3].parse()?;
 
     let p0 = p.properties[0].clone().into_iter().map(|item| if item <= UNDEF { None } else {Some(item as f64)}).collect();
 
