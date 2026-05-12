@@ -5,8 +5,9 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.5.60", features = ["derive"] }
+kiss3d = { version = "0.40.0", features = ["egui"] }
+egui = "0.33.3"
 
-kiss3d = "0.40.0"
 properties3d = { git = "https://github.com/geomodel/properties3d.git" }
 io3d = { git = "https://github.com/geomodel/io3d.git" }
 

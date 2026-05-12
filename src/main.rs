@@ -1,41 +1,31 @@
-use kiss3d::prelude::*;
-use std::f32::consts::PI;
-
-mod command;
+mod cli;
+mod data3d;
+mod gs_loader;
+mod ui;
+mod kiss3d_state;
+mod axis3d;
+mod app_state;
 mod content3d;
-mod data;
 
 //  //  //  //  //  //  //  //
 //  //  //  //  //  //  //  //
 #[kiss3d::main]
 async fn main() {
-    let (data3d, z_scale) = command::run();
+    let (gs_loaded, selected, z_scale) = cli::parse_n_load();
 
-    let mut window = Window::new(&format!("view3d: {}", data3d.name)).await;
-    let mut camera = OrbitCamera3d::default();
-    let mut scene = SceneNode3d::empty()
-        .rotate(Quat::from_axis_angle(Vec3::X, -PI / 2.))
-        .rotate(Quat::from_axis_angle(Vec3::Y, PI));
+    let mut kiss3d_state = kiss3d_state::Kiss3dState::new(&gs_loaded.name).await;
 
-    let _light_source_0 = scene
-        .add_light(Light::point(100.0))
-        .set_position(Vec3::new(0.0, 0.0, 20.0));
-    let _light_source_1 = scene
-        .add_light(Light::point(100.0))
-        .set_position(Vec3::new(0.0, 40.0, -20.0));
+    let mut state = app_state::AppState::new(0.8, z_scale, &gs_loaded.ijk);
+    state.reshow_axis3d(&mut kiss3d_state.scene);
 
-    let font = Font::default();
-    let info_text = format!(
-        "min: {:1.4}\navr: {:1.4}\nmax: {:1.4}",
-        data3d.min_value,
-        data3d.avr_value,
-        data3d.max_value,
-    );
-
-    content3d::init_axes(&mut scene, 0.5);
-    content3d::construct_property3d(&mut scene, z_scale, 0.8, &data3d);
-
-    while window.render_3d(&mut scene, &mut camera).await {
-        window.draw_text(&info_text, Vec2::ZERO, 20.0, &font, CYAN);
+    while kiss3d_state.window.render_3d(&mut kiss3d_state.scene, &mut kiss3d_state.camera).await {
+        // egUI
+        let mut trigger = false;
+        kiss3d_state.window.draw_ui(|ctx| {
+            ui::update(ctx, &selected, &mut trigger);
+        });
+        if trigger {
+            state.trigger(&selected, &mut kiss3d_state.scene);
+        }
     }
 }
