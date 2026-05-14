@@ -1,35 +1,37 @@
-use kiss3d::prelude::*;
+//use kiss3d::prelude::*;
 
-use crate::data3d;
-use crate::content3d;
-use crate::axis3d;
+//use crate::data3d;
+//use crate::content3d;
+//use crate::axis3d;
+
+//  //  //  //  //  //  //  //
+pub fn init(scale: f32, z_scale: f32, ijk: &[usize; 3]) -> AppState {
+    let [i, j, k] = *ijk;
+    let axis_info = AxisInfo::new(
+        SomeIJK {
+            i,
+            j,
+            k,
+        },
+        scale,
+        z_scale,
+    );
+
+    AppState {
+        axis_info,
+        prop_group: None,
+        //axis3d: SceneNode3d::empty(),
+    }
+}
 
 //  //  //  //  //  //  //  //
 pub struct AppState {
     pub axis_info: AxisInfo,
     pub prop_group: Option<kiss3d::prelude::SceneNode3d>,
-    pub axis3d: kiss3d::prelude::SceneNode3d,
+    //pub axis3d: kiss3d::prelude::SceneNode3d,
 }
 impl AppState {
-    pub fn new(scale: f32, z_scale: f32, ijk: &[usize; 3]) -> Self {
-        let [i, j, k] = *ijk;
-        let axis_info = AxisInfo::new(
-            SomeIJK {
-                i,
-                j,
-                k,
-            },
-            scale,
-            z_scale,
-        );
-
-        Self {
-            axis_info,
-            prop_group: None,
-            axis3d: SceneNode3d::empty(),
-        }
-    }
-
+    /*
     pub fn trigger(&mut self, selected: &data3d::SelectedProperty, scene: &mut SceneNode3d) {
         println!("triggered");
         if let &mut Some(ref mut v) = &mut self.prop_group {
@@ -48,6 +50,7 @@ impl AppState {
         self.axis3d.remove();
         self.axis3d = axis3d::init(scene, 0.5, &self.axis_info);
     }
+    */
 }
 
 //  //  //  //  //  //  //  //

@@ -1,25 +1,29 @@
 use clap::Parser;
 
-use crate::data3d;
-use crate::gs_loader;
+//use crate::data3d;
+//use crate::gs_loader;
 
-const UNDEF: f32 = -999.0;
+//const UNDEF: f32 = -999.0;
 
 //  //  //  //  //  //  //  //
 #[derive(clap::Parser, Debug)]
 #[command(about)]
-struct CliArgs {
+pub struct CliArgs {
     #[arg(long, default_value_t = 0)]
-    property_index: usize,
+    pub property_index: usize,
     #[arg(short, long, default_value_t = 1.0)]
-    z_scale: f32,
+    pub z_scale: f32,
     #[arg(long, value_delimiter = ',')]
-    ijk: Option<Vec<usize>>,
+    pub ijk: Option<Vec<usize>>,
     #[arg(short, long)]
-    property: String,
+    pub property: String,
 }
 
 //  //  //  //  //  //  //  //
+pub fn parse_cli() -> CliArgs {
+    CliArgs::parse()
+}
+/*
 pub fn parse_n_load() -> (gs_loader::LoadedData3D, data3d::SelectedProperty, f32) {
     let cli = CliArgs::parse();
 
@@ -35,3 +39,4 @@ pub fn parse_n_load() -> (gs_loader::LoadedData3D, data3d::SelectedProperty, f32
         cli.z_scale,
     )
 }
+*/

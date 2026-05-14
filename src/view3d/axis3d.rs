@@ -7,7 +7,7 @@ use crate::app_state;
 pub fn init(
     parent_scene: &mut SceneNode3d,
     size: f32,
-    axis: &app_state::AxisInfo,
+    axis_info: &app_state::AxisInfo,
 ) -> SceneNode3d {
     let mut scene = parent_scene.add_group();
 
@@ -35,7 +35,7 @@ pub fn init(
                     .set_position(Vec3::new(0.0, 0.0, size*1.0))
                     .set_color(BLUE);
 
-    scene.add_cube(axis.size.fi*1.001, axis.size.fj*1.001, axis.size.fk*1.001)
+    scene.add_cube(axis_info.size.fi*1.001, axis_info.size.fj*1.001, axis_info.size.fk*1.001)
             .set_color( Color::new_alpha( 0.5, 0.5, 0.5, 0.33) );
 
     scene
