@@ -9,17 +9,18 @@ pub struct Kiss3dState {
     camera: OrbitCamera3d,
     scene: SceneNode3d,
     node_for_data: SceneNode3d,
-    node_for_axis: SceneNode3d,
 }
 
 impl Kiss3dState {
-    pub async fn run(&mut self, mut ui_closure: impl FnMut(&egui::Context) ) {
+    pub async fn run(&mut self, mut ui_closure: impl FnMut(&egui::Context, &mut SceneNode3d) ) {
         while self
             .window
             .render_3d(&mut self.scene, &mut self.camera)
             .await
         {
-            self.window.draw_ui(&mut ui_closure);
+            self.window.draw_ui(|ctx| {
+                ui_closure(ctx, &mut self.node_for_data);
+            });
         }
     }
 }
@@ -45,14 +46,12 @@ pub async fn init(
 
     let node_for_data = scene.add_group();
 
-    //let node_for_axis =  scene.add_group();
-    let node_for_axis = crate::view3d::axis3d_init(&mut scene, axis_size, axis_info);
+    let _node_for_axis = crate::view3d::axis3d_init(&mut scene, axis_size, axis_info);
 
     Kiss3dState {
         window,
         camera,
         scene,
         node_for_data,
-        node_for_axis,
     }
 }

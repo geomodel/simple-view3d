@@ -1,42 +1,41 @@
+mod app_state;
 mod config;
 mod gs_loader;
 mod rendering;
-mod app_state;
 mod ui;
 
 mod view3d;
 
-const SCALE: f32 = 0.8;
-const AXIS_SIZE: f32 = 0.5;
-
 //  //  //  //  //  //  //  //
+mod app_consts {
+    pub const SCALE: f32 = 0.8;
+    pub const AXIS_SIZE: f32 = 0.5;
+    pub const UNDEF: f32 = -999.0;
+}
+
 //  //  //  //  //  //  //  //
 #[kiss3d::main]
 async fn main() {
+    let mut state = init_state();
+
+    let mut renderer =
+        rendering::init(&state.get_name(), app_consts::AXIS_SIZE, &state.axis_info).await;
+
+    state.property_names.push("a1".into());
+    state.property_names.push("b2".into());
+
+    renderer
+        .run(|ctx, mut data_node| {
+            ui::update(ctx, &mut state);
+            //state.check_trigger(&mut data_node);
+        })
+        .await;
+}
+
+//  //  //  //  //  //  //  //
+fn init_state() -> app_state::AppState {
     let config = config::parse_cli();
-    let data = gs_loader::LoadedData3D
-        ::from_filename(&config.property, &config.ijk)
-            .unwrap_or_else(|err| panic!("Fatal: {}", err));
-    let mut state = app_state::init(SCALE, config.z_scale, &data.ijk);
-
-    let mut renderer = rendering::init(&data.name, AXIS_SIZE, &state.axis_info).await;
-
-    let selected: usize = 0;
-    let mut trigger = false;
-    renderer.run( |ctx| {
-        ui::update(ctx, &selected, &mut trigger);
-    }).await;
-
-            //todo!("run-loop")
-            /*
-            // egUI
-            let mut trigger = false;
-            kiss3d_state.window.draw_ui(|ctx| {
-                ui::update(ctx, &selected, &mut trigger);
-            });
-            if trigger {
-                state.trigger(&selected, &mut kiss3d_state.scene);
-            }
-            */
-    //state.reshow_axis3d(&mut kiss3d_state.scene);
+    let data = gs_loader::LoadedData3D::from_filename(&config.property, &config.ijk)
+        .unwrap_or_else(|err| panic!("Fatal: {}", err));
+    app_state::init(data, app_consts::SCALE, config.z_scale)
 }

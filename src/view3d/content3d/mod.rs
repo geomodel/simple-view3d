@@ -1,6 +1,5 @@
 use kiss3d::prelude::*;
 
-use crate::data3d;
 use crate::app_state;
 
 mod coloring;
@@ -12,7 +11,7 @@ mod coloring;
 pub fn construct_property3d(
     axis: &app_state::AxisInfo,
     parent_scene: &mut SceneNode3d,
-    data3d: &data3d::SelectedProperty,
+    data3d: &super::SelectedProperty,
 ) -> SceneNode3d {
 
     let j_max_1 = axis.ijk.j - 1;
