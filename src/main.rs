@@ -1,9 +1,10 @@
 mod app_state;
+use app_state::AppState;
+
 mod config;
 mod gs_loader;
 mod rendering;
 mod ui;
-
 mod view3d;
 
 //  //  //  //  //  //  //  //
@@ -21,13 +22,15 @@ async fn main() {
     let mut renderer =
         rendering::init(&state.get_name(), app_consts::AXIS_SIZE, &state.axis_info).await;
 
-    state.property_names.push("a1".into());
-    state.property_names.push("b2".into());
+    //state.property_names.push("a1".into());
+    //state.property_names.push("b2".into());
 
     renderer
         .run(|ctx, mut data_node| {
-            ui::update(ctx, &mut state);
-            //state.check_trigger(&mut data_node);
+            let mut property_index: Option<usize> = state.get_visible_index();
+            ui::update(ctx, &state, &mut property_index);
+            state.select_property(property_index);
+            state.update(&mut data_node);
         })
         .await;
 }
@@ -37,5 +40,5 @@ fn init_state() -> app_state::AppState {
     let config = config::parse_cli();
     let data = gs_loader::LoadedData3D::from_filename(&config.property, &config.ijk)
         .unwrap_or_else(|err| panic!("Fatal: {}", err));
-    app_state::init(data, app_consts::SCALE, config.z_scale)
+    AppState::init(data, app_consts::SCALE, config.z_scale)
 }
