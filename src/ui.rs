@@ -1,4 +1,4 @@
-use crate::app_state::AppState;
+use crate::app_state::{AppState, SomeIJK};
 
 //  //  //  //  //  //  //  //
 //  //  //  //  //  //  //  //
@@ -6,6 +6,7 @@ pub(crate) fn update(
     ctx: &egui::Context, //
     state: &AppState,
     out_property_index: &mut Option<usize>,
+    out_slice_planes: &mut SomeIJK,
 ) {
     egui::Window::new("inspector")
         .default_pos([0.0, 0.0])
@@ -24,5 +25,11 @@ pub(crate) fn update(
                     }
                 }
             });
+
+            ui.separator();
+            let ijk = &state.axis_info.ijk;
+            ui.add(egui::Slider::new(&mut out_slice_planes.i, 0..=(ijk.i-1)).text("I"));
+            ui.add(egui::Slider::new(&mut out_slice_planes.j, 0..=(ijk.j-1)).text("J"));
+            ui.add(egui::Slider::new(&mut out_slice_planes.k, 0..=(ijk.k-1)).text("K"));
         });
 }

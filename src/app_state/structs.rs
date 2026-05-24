@@ -1,4 +1,5 @@
 //  //  //  //  //  //  //  //
+#[derive(Clone, PartialEq)]
 pub struct SomeIJK {
     pub i: usize,
     pub j: usize,

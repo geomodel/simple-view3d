@@ -25,7 +25,12 @@ async fn main() {
     renderer
         .run(|ctx, mut data_node| {
             let mut property_index: Option<usize> = state.get_visible_index();
-            ui::update(ctx, &state, &mut property_index);
+            let mut slice_planes = state.slice_planes.clone();
+            ui::update(ctx, &state, &mut property_index, &mut slice_planes);
+            if state.slice_planes != slice_planes {
+                state.slice_planes = slice_planes;
+                state.set_invalidate();
+            }
             state.select_property(property_index);
             state.update(&mut data_node);
         })

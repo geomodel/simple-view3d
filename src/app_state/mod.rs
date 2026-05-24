@@ -9,6 +9,7 @@ use kiss3d::prelude::SceneNode3d;
 pub struct AppState {
     data: gs_loader::LoadedData3D,
     pub axis_info: AxisInfo,
+    pub slice_planes: SomeIJK,
     pub property_names: Vec<String>,
     pub selected: Option<view3d::SelectedProperty>,
     visible_index: Option<usize>,
@@ -35,6 +36,7 @@ impl AppState {
         AppState {
             data,
             axis_info,
+            slice_planes: SomeIJK { i: 0, j: j-1, k: 0 },
             property_names,
             selected: None,
             visible_index: None,
@@ -63,12 +65,17 @@ impl AppState {
         }
     }
 
+    pub fn set_invalidate(&mut self) {
+        self.invalidated = true;
+    }
+
     pub fn get_visible_index(&self) -> Option<usize> {
         self.visible_index
     }
     pub fn select_property(&mut self, select_index: Option<usize>) {
         if self.visible_index != select_index {
-            self.invalidated = true;
+            //self.invalidated = true;
+            self.set_invalidate();
             self.visible_index = select_index;
         }
     }
@@ -89,7 +96,7 @@ impl AppState {
                     view3d::SelectedProperty::new(&self.data, index, crate::app_consts::UNDEF);
                 //
                 {
-                    let v = view3d::construct_property3d(&self.axis_info, scene, &some_selected);
+                    let v = view3d::construct_property3d(&self.axis_info, &self.slice_planes, scene, &some_selected);
                     self.property_node = Some(v);
                 }
                 //
